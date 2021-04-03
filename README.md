@@ -1,3 +1,9 @@
+<p align="center">
+<br>
+<img src="https://github.com/Srile/wle-keyboard/blob/main/img/screenshot.png">
+</p>
+
+
 ## Description
 This is a keyboard component for the [Wonderland Engine](https://wonderlandengine.com/) that lets you use an on screen keyboard. This works both with Desktop and/or VR.
 
