@@ -6,7 +6,6 @@ WL.registerComponent('keyboard-text-displayer', {
       this.keyboard.getComponent('keyboard').addOnLinkedTextChangedCallback(this.onTextChanged.bind(this));
     },
     onTextChanged: function(newText) {
-      console.log("cz")
       this.text.text = newText;
     }
 });
