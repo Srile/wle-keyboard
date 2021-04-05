@@ -5,7 +5,7 @@ WL.registerComponent('keyboard', {
     keyMesh: {type: WL.Type.Mesh, default: null},
     keyMaterial: {type: WL.Type.Material, default: null},
     textMaterial: {type: WL.Type.Material, default: null},
-    textSize: {type: WL.Type.Float, default: 7.0},
+    textSize: {type: WL.Type.Float, default: 1.200},
     clickMaterial: {type: WL.Type.Material},
 }, {
     start: function() {
@@ -47,7 +47,9 @@ WL.registerComponent('keyboard', {
         currentChild.name = currentKey[0];
 
         this.config[currentKey[0]].object = currentChild;
-        let mesh = currentChild.addComponent('mesh');
+
+        let meshChild = WL.scene.addObject(currentChild);
+        let mesh = meshChild.addComponent('mesh');
 
         this.config[currentKey[0]].mesh = mesh;
 
@@ -67,13 +69,14 @@ WL.registerComponent('keyboard', {
         textChild.setTranslationLocal(childPos)
 
         this.config[currentKey[0]].textComponent = text;
+        this.config[currentKey[0]].meshChild = meshChild;
 
         let widthOffset =  ((currentKeyData.width / UNIT_SIZE) - 1);
         childPos[0] = (currentKeyData.position.x * this.panelSizeX) + widthOffset * 0.15;
         childPos[1] = currentKeyData.position.y * this.panelSizeY;
         childPos[2] = 0.02;
         currentChild.setTranslationLocal(childPos)
-        currentChild.scale([0.15 + widthOffset * 0.15, 0.15, 0.15]);
+        meshChild.scale([0.15 + widthOffset * 0.15, 0.15, 0.15]);
       }
       this.getContent(0);
     },
@@ -82,7 +85,7 @@ WL.registerComponent('keyboard', {
       for(let i = 0; i < keys.length; i++) {
         let currentKey = keys[i];
         let currentChild = this.config[currentKey[0]].object;
-        glMatrix.vec3.copy(this.tempScaleVec, currentChild.scalingLocal);
+        glMatrix.vec3.copy(this.tempScaleVec, this.config[currentKey[0]].meshChild.scalingLocal);
         this.tempScaleVec[0] = this.tempScaleVec[0];
         this.tempScaleVec[1] = this.tempScaleVec[1];
         currentChild.getTranslationLocal(this.tempVec);

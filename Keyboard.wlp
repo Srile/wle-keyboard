@@ -275,7 +275,7 @@
                         "panelSizeX": 0.00800000037997961,
                         "panelSizeY": 0.00800000037997961,
                         "textMaterial": "DefaultFontMaterial",
-                        "textSize": 7.0,
+                        "textSize": 1.2000000476837159,
                         "padding": 2,
                         "debugObj": "36",
                         "debugObject": "36",
@@ -371,7 +371,8 @@
                 0.0,
                 1.0
             ],
-            "parent": "32"
+            "parent": "32",
+            "deleted": true
         },
         "38": {
             "name": "KeyboardTextDisplay",
@@ -406,7 +407,7 @@
                 0.0,
                 2.3826828002929689,
                 3.706956386566162,
-                -2.980232238769532e-8,
+                -2.9802322387695329e-8,
                 1.0
             ]
         },
