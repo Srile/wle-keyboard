@@ -279,5 +279,22 @@ WL.registerComponent('keyboard', {
         this.collider.active = true;
       }
     }
-
 });
+
+/** Component to play sound on keyboard keys with howler-audio-source */
+WL.registerComponent('howler-keyboard-sound', {
+    keyboard: {type: WL.Type.Object}
+}, {
+    start: function() {
+        if(!this.keyboard) {
+            throw new Error('keyboard object not set');
+        }
+        const howlerSource = this.object.getComponent('howler-audio-source');
+        const kb = this.keyboard.getComponent('keyboard');
+
+        kb.addKeyCallback(() => {
+            howlerSource.play();
+        })
+    }
+});
+
