@@ -23,13 +23,16 @@ WL.registerComponent('keyboard', {
 
       this.cursorObject = WL.scene.addObject(this.object);
 
-      this.cursorTarget.addClickFunction(function(object, cursor) {
+      this.cursorTarget.addClickFunction((_, cursor) => {
         this.cursorObject.setTranslationWorld(cursor.cursorPos);
         this.cursorObject.getTranslationLocal(this.clickPosition);
+        glMatrix.vec3.div(this.clickPosition, this.clickPosition, this.object.scalingLocal);
         let clickedCharacter = this.getClickedCharacter(this.clickPosition);
-        if(clickedCharacter != null)
-          this.onSelect(clickedCharacter);
-      }.bind(this));
+        if(clickedCharacter != null) {
+            this.onSelect(clickedCharacter);
+        }
+      });
+
 
       this.text = "";
       this.shift = false;
