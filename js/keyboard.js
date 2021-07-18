@@ -98,6 +98,15 @@ WL.registerComponent('keyboard', {
         meshChild.scale([0.15 + widthOffset * 0.15, 0.15, 0.15]);
       }
       this.getContent(0);
+
+      this.keyCallbacks = [];
+    },
+    addKeyCallback: function(f) {
+        this.keyCallbacks.push(f);
+    },
+    removeKeyCallback: function(f) {
+        const index = this.keyCallbacks.indexOf(f);
+        this.keyCallbacks.splice(index, 1);
     },
     getCharacter: function(localPosition) {
       let keys = Object.entries( this.config );
