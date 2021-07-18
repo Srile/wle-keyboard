@@ -20,7 +20,7 @@ WL.registerComponent('keyboard', {
 
       this.cursorTarget = this.object.children[0].getComponent('cursor-target');
       this.collider = this.object.children[0].getComponent('collision');
-      window.kb = this;
+      window.vrKeyboard = this;
 
       this.cursorObject = WL.scene.addObject(this.object);
 
@@ -60,7 +60,6 @@ WL.registerComponent('keyboard', {
 
       let keys = Object.entries( this.config );
       this.children = WL.scene.addObjects(keys.length, this.object, keys.length);
-      let childPos = new Float32Array(3);
 
       for(let i = 0; i < keys.length; i++) {
         let currentChild = this.children[i];
@@ -84,20 +83,18 @@ WL.registerComponent('keyboard', {
         text.material = this.textMaterial;
         text.alignment = 2;
         text.justification = 2;
-        childPos[0] = 0
-        childPos[1] = 0
-        childPos[2] = 0.02;
         textChild.scale([this.textSize, this.textSize, this.textSize]);
-        textChild.setTranslationLocal(childPos)
+        textChild.setTranslationLocal([0, 0, 0.02]);
 
         this.config[currentKey[0]].textComponent = text;
         this.config[currentKey[0]].meshChild = meshChild;
 
         let widthOffset =  ((currentKeyData.width / UNIT_SIZE) - 1);
-        childPos[0] = (currentKeyData.position.x * this.panelSizeX) + widthOffset * 0.15;
-        childPos[1] = currentKeyData.position.y * this.panelSizeY;
-        childPos[2] = 0.02;
-        currentChild.setTranslationLocal(childPos)
+        currentChild.setTranslationLocal([
+            (currentKeyData.position.x * this.panelSizeX) + widthOffset * 0.15,
+            currentKeyData.position.y * this.panelSizeY,
+            0.02
+        ]);
         meshChild.scale([0.15 + widthOffset * 0.15, 0.15, 0.15]);
       }
       this.getContent(0);
@@ -126,9 +123,7 @@ WL.registerComponent('keyboard', {
     },
     clickKey: function(mesh) {
       mesh.material = this.clickMaterial;
-      setTimeout(function() {
-        mesh.material = this.keyMaterial;
-      }.bind(this), 150);
+      setTimeout(() => { mesh.material = this.keyMaterial; }, 150);
     },
     getConfig: function() {
       let width = 51.2;
@@ -264,6 +259,8 @@ WL.registerComponent('keyboard', {
         this.textChangedCallbacks = [];
       this.textChangedCallbacks.push(f);
     },
+    show: function() { this.setVisibility(true); },
+    hide: function() { this.setVisibility(false); },
     setVisibility: function(b) {
       if(!b) {
         this.object.scale([0, 0, 0]);
