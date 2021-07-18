@@ -2,9 +2,10 @@ WL.registerComponent('keyboard', {
     panelSizeX: {type: WL.Type.Float, default: 0.008},
     panelSizeY: {type: WL.Type.Float, default: 0.008},
     padding: {type: WL.Type.Int, default: 2},
-    keyMesh: {type: WL.Type.Mesh, default: null},
-    keyMaterial: {type: WL.Type.Material, default: null},
-    textMaterial: {type: WL.Type.Material, default: null},
+    keyMesh: {type: WL.Type.Mesh},
+    keyMaterial: {type: WL.Type.Material},
+    keyMaterialHovered: {type: WL.Type.Material},
+    textMaterial: {type: WL.Type.Material},
     textSize: {type: WL.Type.Float, default: 1.200},
     clickMaterial: {type: WL.Type.Material},
 }, {
@@ -33,6 +34,24 @@ WL.registerComponent('keyboard', {
         }
       });
 
+      if('addMoveFunction' in this.cursorTarget && this.keyMaterialHovered) {
+        this.lastCharacter = null;
+
+        this.cursorTarget.addMoveFunction((_, cursor) => {
+            this.cursorObject.setTranslationWorld(cursor.cursorPos);
+            this.cursorObject.getTranslationLocal(this.clickPosition);
+            glMatrix.vec3.div(this.clickPosition, this.clickPosition, this.object.scalingLocal);
+            let c = this.getCharacter(this.clickPosition);
+            if(this.lastCharacter != null) {
+                this.lastCharacter.mesh.material = this.keyMaterial;
+                this.lastCharacter = null;
+            }
+            if(c != null) {
+                c.config.mesh.material = this.keyMaterialHovered;
+                this.lastCharacter = c.config;
+            }
+        });
+      }
 
       this.text = "";
       this.shift = false;
@@ -83,26 +102,27 @@ WL.registerComponent('keyboard', {
       }
       this.getContent(0);
     },
-    getClickedCharacter: function(localPosition) {
+    getCharacter: function(localPosition) {
       let keys = Object.entries( this.config );
       for(let i = 0; i < keys.length; i++) {
-        let currentKey = keys[i];
-        let currentChild = this.config[currentKey[0]].object;
-        glMatrix.vec3.copy(this.tempScaleVec, this.config[currentKey[0]].meshChild.scalingLocal);
-        this.tempScaleVec[0] = this.tempScaleVec[0];
-        this.tempScaleVec[1] = this.tempScaleVec[1];
-        currentChild.getTranslationLocal(this.tempVec);
+        let key = keys[i][0];
+        this.tempScaleVec.set(this.config[key].meshChild.scalingLocal);
+        this.config[key].object.getTranslationLocal(this.tempVec);
 
         glMatrix.vec2.sub(this.tempVec2Min, this.tempVec, this.tempScaleVec)
         glMatrix.vec2.add(this.tempVec2Max, this.tempVec, this.tempScaleVec)
 
-        if( this.tempVec2Min[0] <= localPosition[0] && localPosition[0] <= this.tempVec2Max[0] && this.tempVec2Min[1] <= localPosition[1] && localPosition[1] <= this.tempVec2Max[1] ) {
-          this.clickKey(this.config[currentKey[0]].mesh)
-          return keys[i][0];
+        if(this.tempVec2Min[0] <= localPosition[0] && localPosition[0] <= this.tempVec2Max[0] && this.tempVec2Min[1] <= localPosition[1] && localPosition[1] <= this.tempVec2Max[1] ) {
+            return {key: keys[i][0], config: this.config[key]};
         }
       }
-
       return null;
+    },
+    getClickedCharacter: function(localPosition) {
+      const c = this.getCharacter(localPosition);
+      if(!c) return null;
+      this.clickKey(c.config.mesh)
+      return c.key;
     },
     clickKey: function(mesh) {
       mesh.material = this.clickMaterial;
