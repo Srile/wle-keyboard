@@ -31,7 +31,7 @@ WL.registerComponent('keyboard', {
           this.onSelect(clickedCharacter);
       }.bind(this));
 
-      this.linkedText = "";
+      this.text = "";
       this.shift = false;
 
       const UNIT_SIZE = 51.2;
@@ -192,54 +192,54 @@ WL.registerComponent('keyboard', {
       }
     },
     onSelect: function( key ) {
-      let changeLayout = false
-      let change = false
+      let changeLayout = false;
+      let change = null;
 
       switch(key) {
         case 'btn34'://Enter
-            this.linkedText += "\n";
-            change = true;
+            change = '\n';
             break;
         case 'btn32'://space
-            this.linkedText += ' ';
-            change = true;
+            change = ' ';
             break;
         case 'btn30'://switch keyboard
             this.shift = false;
             this.getContent( this.keyboardIndex < 2 ? 2 : 0 );
             break;
         case 'btn28'://backspace
-            this.linkedText = this.linkedText.substring( 0, this.linkedText.length-1 );
-            change = true;
+            change = -1;
             break;
+        default:
+            change = this.content[key];
+            /* If shift was pressed, we want to unshift! */
+            if(!this.shift) break;
         case 'btn20'://shift
             this.shift = !this.shift;
             if (this.keyboardIndex==0){
-                this.getContent( 1 );
+                this.getContent(1);
             }else if (this.keyboardIndex==1){
-                this.getContent( 0 );
+                this.getContent(0);
             }else if (this.keyboardIndex==2){
-                this.getContent( 3 );
+                this.getContent(3);
             }else if (this.keyboardIndex==3){
-                this.getContent( 2 );
+                this.getContent(2);
             }
             break;
-        default:
-            const txt = this.content[key];
-            this.linkedText += txt;
-            change = true;
-            break;
       }
-      if ( change ) {
-        for(let i = 0; i < this.linkedTextChangedCallbacks.length; i++) {
-          this.linkedTextChangedCallbacks[i](this.linkedText);
+      if(change) {
+        if(change < 0) {
+            this.text = this.text.substring(0, this.text.length + change);
+        } else {
+            this.text += change;
         }
+        for(const f of this.textChangedCallbacks) f(this.text);
+        for(const f of this.keyCallbacks) f(change);
       }
     },
-    addOnLinkedTextChangedCallback: function(f) {
-      if(!this.linkedTextChangedCallbacks)
-        	this.linkedTextChangedCallbacks = [];
-      this.linkedTextChangedCallbacks.push(f);
+    addTextChangedCallback: function(f) {
+      if(!this.textChangedCallbacks)
+        this.textChangedCallbacks = [];
+      this.textChangedCallbacks.push(f);
     },
     setVisibility: function(b) {
       if(!b) {

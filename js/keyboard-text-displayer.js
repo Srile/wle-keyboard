@@ -3,7 +3,7 @@ WL.registerComponent('keyboard-text-displayer', {
 }, {
     start: function() {
       this.text = this.object.getComponent('text');
-      this.keyboard.getComponent('keyboard').addOnLinkedTextChangedCallback(this.onTextChanged.bind(this));
+      this.keyboard.getComponent('keyboard').addTextChangedCallback(this.onTextChanged.bind(this));
     },
     onTextChanged: function(newText) {
       this.text.text = newText;
