@@ -9,8 +9,8 @@ WL.registerComponent('keyboard', {
     textSize: {type: WL.Type.Float, default: 1.200},
     clickMaterial: {type: WL.Type.Material},
 }, {
-    start: function() {
-      this.getConfig();
+
+    init: function() {
       this.clickPosition = new Float32Array(3);
       this.tempVec = new Float32Array(3);
       this.tempScaleVec = new Float32Array(3);
@@ -18,6 +18,12 @@ WL.registerComponent('keyboard', {
       this.tempVec2Min = new Float32Array(2);
       this.tempVec2Max = new Float32Array(2);
 
+      this.textChangedCallbacks = [];
+      this.keyCallbacks = [];
+    },
+
+    start: function() {
+      this.getConfig();
       this.cursorTarget = this.object.children[0].getComponent('cursor-target');
       this.collider = this.object.children[0].getComponent('collision');
       window.vrKeyboard = this;
@@ -98,8 +104,6 @@ WL.registerComponent('keyboard', {
         meshChild.scale([0.15 + widthOffset * 0.15, 0.15, 0.15]);
       }
       this.getContent(0);
-
-      this.keyCallbacks = [];
     },
     addKeyCallback: function(f) {
         this.keyCallbacks.push(f);
@@ -236,10 +240,6 @@ WL.registerComponent('keyboard', {
         case 'btn28'://backspace
             change = -1;
             break;
-        default:
-            change = this.content[key];
-            /* If shift was pressed, we want to unshift! */
-            if(!this.shift) break;
         case 'btn20'://shift
             this.shift = !this.shift;
             if (this.keyboardIndex==0){
@@ -250,6 +250,22 @@ WL.registerComponent('keyboard', {
                 this.getContent(3);
             }else if (this.keyboardIndex==3){
                 this.getContent(2);
+            }
+            break;
+        default:
+            change = this.content[key];
+            /* If shift was pressed, we want to unshift! */
+            if(this.shift) {
+                this.shift = false;
+                if (this.keyboardIndex==0){
+                    this.getContent(1);
+                } else if (this.keyboardIndex==1){
+                     this.getContent(0);
+                } else if (this.keyboardIndex==2){
+                     this.getContent(3);
+                } else if (this.keyboardIndex==3){
+                    this.getContent(2);
+                }
             }
             break;
       }
@@ -264,8 +280,6 @@ WL.registerComponent('keyboard', {
       }
     },
     addTextChangedCallback: function(f) {
-      if(!this.textChangedCallbacks)
-        this.textChangedCallbacks = [];
       this.textChangedCallbacks.push(f);
     },
     show: function() { this.setVisibility(true); },
