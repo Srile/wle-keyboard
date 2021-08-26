@@ -11,7 +11,7 @@
                 }
             ],
             "transformation": [
-                0.9999998807907105,
+                0.9999998,
                 0.0,
                 0.0,
                 0.0,
@@ -21,11 +21,11 @@
                 0.0,
                 0.0,
                 0.0,
-                0.9999998807907105,
+                0.9999998,
                 0.0,
                 0.0,
-                2.634943723678589,
-                2.730458974838257,
+                2.6349437,
+                2.7304589,
                 1.0
             ]
         },
@@ -49,12 +49,12 @@
                 0.0,
                 0.0,
                 0.0,
-                -0.0016164779663085938,
-                -3.999999761581421,
+                -0.0016164,
+                -3.9999997,
                 0.0,
                 0.0,
-                3.999999761581421,
-                -0.0016164779663085938,
+                3.9999997,
+                -0.0016164,
                 0.0,
                 0.0,
                 0.0,
@@ -88,7 +88,7 @@
                 0.5,
                 0.0,
                 2.9802322387695329e-8,
-                0.4999999403953552,
+                0.4999999,
                 5.960464477539065e-8,
                 1.0
             ],
@@ -126,6 +126,9 @@
                     "input": {
                         "type": "eye left"
                     }
+                },
+                {
+                    "type": "howler-audio-listener"
                 }
             ]
         },
@@ -150,7 +153,7 @@
                 {
                     "type": "light",
                     "light": {
-                        "attenuation": 0.10000000149011612
+                        "attenuation": 0.1
                     }
                 }
             ],
@@ -167,7 +170,7 @@
                 0.0,
                 1.0,
                 0.0,
-                4.656612873077393e-10,
+                0.0,
                 3.0,
                 2.0,
                 1.0
@@ -179,7 +182,7 @@
                 {
                     "type": "light",
                     "light": {
-                        "attenuation": 0.10000000149011612
+                        "attenuation": 0.1
                     }
                 }
             ],
@@ -257,7 +260,7 @@
                 0.0,
                 0.75,
                 0.0,
-                0.4999999701976776,
+                0.4999999,
                 0.75,
                 -1.25,
                 1.0
@@ -272,34 +275,47 @@
                     "keyboard": {
                         "keyMesh": "7",
                         "keyMaterial": "20",
-                        "panelSizeX": 0.00800000037997961,
-                        "panelSizeY": 0.00800000037997961,
+                        "panelSizeX": 0.007,
+                        "panelSizeY": 0.006,
                         "textMaterial": "DefaultFontMaterial",
-                        "textSize": 1.2000000476837159,
+                        "textSize": 1.2,
                         "padding": 2,
                         "debugObj": "36",
                         "debugObject": "36",
                         "cursorObject": "36",
-                        "clickMaterial": "37"
+                        "clickMaterial": "37",
+                        "keyMaterialHovered": "60"
+                    }
+                },
+                {
+                    "type": "howler-audio-source",
+                    "howler-audio-source": {
+                        "src": "sfx/click.wav"
+                    }
+                },
+                {
+                    "type": "howler-keyboard-sound",
+                    "howler-keyboard-sound": {
+                        "keyboard": "32"
                     }
                 }
             ],
             "transformation": [
-                1.0,
+                0.5,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0,
+                0.4331345,
+                -0.2497884,
                 0.0,
                 0.0,
+                0.2497884,
+                0.4331345,
                 0.0,
-                0.0,
-                1.0,
-                0.0,
-                -1.8885107040405272,
-                3.471107244491577,
-                0.0,
+                -0.7884122,
+                3.0197527,
+                0.8168522,
                 1.0
             ]
         },
@@ -321,9 +337,9 @@
                         "groups": 16,
                         "box": {
                             "extents": [
-                                2.049999952316284,
-                                1.0,
-                                0.009999999776482582
+                                1.0249999,
+                                0.5,
+                                0.0099999
                             ]
                         }
                     }
@@ -333,41 +349,41 @@
                 }
             ],
             "transformation": [
-                2.049999952316284,
+                1.8999999,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0,
+                0.8796789,
+                -6.556510925292969e-7,
                 0.0,
                 0.0,
+                7.450580596923828e-7,
+                0.9999998,
                 0.0,
-                0.0,
-                1.0,
-                0.0,
-                1.875,
-                -0.7316558361053467,
-                0.0,
+                1.60833,
+                -0.5915141,
+                0.0020437,
                 1.0
             ]
         },
         "36": {
             "name": "KeyboardMarker",
             "transformation": [
-                0.06375452876091004,
+                0.0637545,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.06375452876091004,
+                0.0637545,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.06375452876091004,
+                0.0637545,
                 0.0,
-                1.8885107040405272,
-                -3.471107244491577,
+                1.8885107,
+                -3.4711072,
                 0.0,
                 1.0
             ],
@@ -381,7 +397,7 @@
                     "type": "text",
                     "text": {
                         "text": "",
-                        "alignment": "left",
+                        "alignment": "center",
                         "justification": "top"
                     }
                 },
@@ -405,9 +421,9 @@
                 0.0,
                 1.0,
                 0.0,
-                2.3826828002929689,
-                3.706956386566162,
-                -2.9802322387695329e-8,
+                0.0,
+                3.4936299,
+                -2.9802322387695315e-8,
                 1.0
             ]
         },
@@ -418,13 +434,13 @@
                 {
                     "type": "input",
                     "input": {
-                        "type": "hand right"
+                        "type": "ray right"
                     }
                 },
                 {
                     "type": "cursor",
                     "cursor": {
-                        "handedness": "right",
+                        "handedness": "input component",
                         "rayCastMode": "collision",
                         "collisionGroup": 4
                     }
@@ -432,8 +448,8 @@
             ]
         },
         "40": {
-            "name": "Cursor",
-            "parent": "39",
+            "name": "CursorRay",
+            "parent": "58",
             "components": [
                 {
                     "type": "mesh",
@@ -444,12 +460,12 @@
                 }
             ],
             "transformation": [
-                0.009999999776482582,
+                0.0099999,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                0.009999999776482582,
+                0.0099999,
                 0.0,
                 0.0,
                 0.0,
@@ -473,21 +489,72 @@
                 }
             ],
             "transformation": [
-                1.0,
+                1.34,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0,
+                1.34,
                 0.0,
                 0.0,
                 0.0,
                 0.0,
-                1.0,
+                1.34,
                 0.0,
                 0.0,
-                4.027519702911377,
+                4.0275197,
                 0.0,
+                1.0
+            ]
+        },
+        "58": {
+            "name": "Input",
+            "parent": "14",
+            "components": [
+                {
+                    "type": "input",
+                    "input": {
+                        "type": "ray left"
+                    }
+                },
+                {
+                    "type": "cursor",
+                    "cursor": {
+                        "handedness": "input component",
+                        "rayCastMode": "collision",
+                        "collisionGroup": 4
+                    }
+                }
+            ]
+        },
+        "59": {
+            "name": "CursorRay",
+            "parent": "39",
+            "components": [
+                {
+                    "type": "mesh",
+                    "mesh": {
+                        "mesh": "8",
+                        "material": "22"
+                    }
+                }
+            ],
+            "transformation": [
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0099999,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.5,
+                0.0,
+                0.0,
+                0.0,
+                -1.5,
                 1.0
             ]
         }
@@ -556,7 +623,6 @@
         },
         "20": {
             "name": "White",
-            "shader": "Phong",
             "Phong": {
                 "specularColor": [
                     9.999899930335233e-7,
@@ -565,16 +631,25 @@
                     1.0
                 ],
                 "shininess": 1
+            },
+            "pipeline": "46",
+            "Flat": {
+                "color": [
+                    0.6078431,
+                    0.607837,
+                    0.607837,
+                    1.0
+                ]
             }
         },
         "22": {
             "name": "Pink",
             "Phong": {
                 "diffuseColor": [
-                    0.9098039269447328,
+                    0.9098039,
                     0.0,
-                    0.5411764979362488,
-                    0.0
+                    0.5411764,
+                    1.0
                 ],
                 "specularColor": [
                     9.999899930335233e-7,
@@ -584,9 +659,9 @@
                 ],
                 "shininess": 10,
                 "ambientColor": [
-                    0.3176470398902893,
+                    0.317647,
                     0.0,
-                    0.2165777683258057,
+                    0.2165777,
                     1.0
                 ]
             }
@@ -596,7 +671,7 @@
             "Phong": {
                 "diffuseColor": [
                     1.0,
-                    0.8039215803146362,
+                    0.8039215,
                     0.0,
                     1.0
                 ],
@@ -607,8 +682,8 @@
                     1.0
                 ],
                 "ambientColor": [
-                    0.384313702583313,
-                    0.3089579045772553,
+                    0.3843137,
+                    0.3089579,
                     0.0,
                     1.0
                 ]
@@ -618,9 +693,9 @@
             "name": "Green",
             "Phong": {
                 "diffuseColor": [
-                    0.15294118225574494,
-                    0.7882353067398071,
-                    0.5411764979362488,
+                    0.1529411,
+                    0.7882353,
+                    0.5411764,
                     1.0
                 ],
                 "specularColor": [
@@ -631,15 +706,14 @@
                 ],
                 "ambientColor": [
                     0.0,
-                    0.23529410362243653,
-                    0.1437908560037613,
+                    0.2352941,
+                    0.1437908,
                     1.0
                 ]
             }
         },
         "34": {
             "name": "WhiteDark",
-            "shader": "Phong",
             "Phong": {
                 "specularColor": [
                     9.999899930335233e-7,
@@ -652,13 +726,21 @@
                     9.999999974752428e-7,
                     9.999899930335233e-7,
                     9.999899930335233e-7,
+                    1.0
+                ]
+            },
+            "pipeline": "46",
+            "Flat": {
+                "color": [
+                    0.3294117,
+                    0.3294084,
+                    0.3294084,
                     1.0
                 ]
             }
         },
         "37": {
-            "name": "ButtonPressedMaterial",
-            "shader": "Phong",
+            "name": "KeyPressed",
             "Phong": {
                 "specularColor": [
                     9.999899930335233e-7,
@@ -668,72 +750,88 @@
                 ],
                 "shininess": 1,
                 "ambientColor": [
-                    0.011626295745372773,
-                    0.077839694917202,
-                    0.10588234663009644,
+                    0.0116262,
+                    0.0778396,
+                    0.1058823,
+                    1.0
+                ]
+            },
+            "pipeline": "46",
+            "Flat": {
+                "color": [
+                    0.490196,
+                    0.6935173,
+                    1.0,
                     1.0
                 ]
             }
+        },
+        "60": {
+            "name": "KeyHovered",
+            "Phong": {
+                "specularColor": [
+                    9.999899930335233e-7,
+                    9.99993744699168e-7,
+                    9.999999974752428e-7,
+                    1.0
+                ],
+                "shininess": 1,
+                "ambientColor": [
+                    0.0116262,
+                    0.0778396,
+                    0.1058823,
+                    1.0
+                ]
+            },
+            "pipeline": "46"
         }
     },
     "shaders": {
-        "1": {
+        "42": {
             "link": {
-                "name": "DistanceFieldVector Textured",
+                "name": "DistanceFieldVector",
                 "file": "default"
             }
         },
-        "2": {
-            "link": {
-                "name": "Flat",
-                "file": "default"
-            }
-        },
-        "3": {
-            "link": {
-                "name": "Flat Textured",
-                "file": "default"
-            }
-        },
-        "4": {
-            "link": {
-                "name": "MeshVisualizer",
-                "file": "default"
-            }
-        },
-        "5": {
-            "link": {
-                "name": "Phong",
-                "file": "default"
-            }
-        },
-        "6": {
-            "link": {
-                "name": "Phong Textured",
-                "file": "default"
-            }
-        },
-        "28": {
+        "44": {
             "link": {
                 "name": "Dynamic",
                 "file": "default"
             }
         },
-        "29": {
+        "45": {
             "link": {
-                "name": "Particle Textured",
+                "name": "Flat",
                 "file": "default"
             }
         },
-        "30": {
+        "48": {
+            "link": {
+                "name": "MeshVisualizer",
+                "file": "default"
+            }
+        },
+        "50": {
+            "link": {
+                "name": "Static",
+                "file": "default"
+            }
+        },
+        "51": {
+            "link": {
+                "name": "Phong",
+                "file": "default"
+            }
+        },
+        "54": {
             "link": {
                 "name": "Skinning",
                 "file": "default"
             }
         },
-        "31": {
+        "55": {
             "link": {
-                "name": "Static",
+                "name": "Particle",
                 "file": "default"
             }
         }
@@ -744,7 +842,8 @@
             "version": [
                 0,
                 8,
-                4
+                7,
+                2
             ]
         },
         "vr": {
@@ -753,11 +852,69 @@
         },
         "scripting": {
             "sourcePaths": [
-                "/js/components/",
+                "/js/editor-components-bundle.js",
                 "js/"
+            ]
+        },
+        "rendering": {
+            "clearColor": [
+                0.9058823,
+                0.9058732,
+                0.9058732,
+                1.0
             ]
         }
     },
     "animations": {},
-    "skins": {}
+    "skins": {},
+    "pipelines": {
+        "43": {
+            "link": {
+                "name": "DistanceFieldVector",
+                "file": "default"
+            }
+        },
+        "46": {
+            "link": {
+                "name": "Flat Opaque",
+                "file": "default"
+            }
+        },
+        "47": {
+            "link": {
+                "name": "Flat Opaque Textured",
+                "file": "default"
+            }
+        },
+        "49": {
+            "link": {
+                "name": "MeshVisualizer",
+                "file": "default"
+            }
+        },
+        "52": {
+            "link": {
+                "name": "Phong Opaque",
+                "file": "default"
+            }
+        },
+        "53": {
+            "link": {
+                "name": "Phong Opaque Textured",
+                "file": "default"
+            }
+        },
+        "56": {
+            "link": {
+                "name": "Foliage",
+                "file": "default"
+            }
+        },
+        "57": {
+            "link": {
+                "name": "Particle",
+                "file": "default"
+            }
+        }
+    }
 }

@@ -2,14 +2,15 @@ WL.registerComponent('keyboard', {
     panelSizeX: {type: WL.Type.Float, default: 0.008},
     panelSizeY: {type: WL.Type.Float, default: 0.008},
     padding: {type: WL.Type.Int, default: 2},
-    keyMesh: {type: WL.Type.Mesh, default: null},
-    keyMaterial: {type: WL.Type.Material, default: null},
-    textMaterial: {type: WL.Type.Material, default: null},
+    keyMesh: {type: WL.Type.Mesh},
+    keyMaterial: {type: WL.Type.Material},
+    keyMaterialHovered: {type: WL.Type.Material},
+    textMaterial: {type: WL.Type.Material},
     textSize: {type: WL.Type.Float, default: 1.200},
     clickMaterial: {type: WL.Type.Material},
 }, {
-    start: function() {
-      this.getConfig();
+
+    init: function() {
       this.clickPosition = new Float32Array(3);
       this.tempVec = new Float32Array(3);
       this.tempScaleVec = new Float32Array(3);
@@ -17,28 +18,54 @@ WL.registerComponent('keyboard', {
       this.tempVec2Min = new Float32Array(2);
       this.tempVec2Max = new Float32Array(2);
 
+      this.textChangedCallbacks = [];
+      this.keyCallbacks = [];
+    },
+
+    start: function() {
+      this.getConfig();
       this.cursorTarget = this.object.children[0].getComponent('cursor-target');
       this.collider = this.object.children[0].getComponent('collision');
-      window.kb = this;
+      window.vrKeyboard = this;
 
       this.cursorObject = WL.scene.addObject(this.object);
 
-      this.cursorTarget.addClickFunction(function(object, cursor) {
+      this.cursorTarget.addClickFunction((_, cursor) => {
         this.cursorObject.setTranslationWorld(cursor.cursorPos);
         this.cursorObject.getTranslationLocal(this.clickPosition);
+        glMatrix.vec3.div(this.clickPosition, this.clickPosition, this.object.scalingLocal);
         let clickedCharacter = this.getClickedCharacter(this.clickPosition);
-        if(clickedCharacter != null)
-          this.onSelect(clickedCharacter);
-      }.bind(this));
+        if(clickedCharacter != null) {
+            this.onSelect(clickedCharacter);
+        }
+      });
 
-      this.linkedText = "";
+      if('addMoveFunction' in this.cursorTarget && this.keyMaterialHovered) {
+        this.lastCharacter = null;
+
+        this.cursorTarget.addMoveFunction((_, cursor) => {
+            this.cursorObject.setTranslationWorld(cursor.cursorPos);
+            this.cursorObject.getTranslationLocal(this.clickPosition);
+            glMatrix.vec3.div(this.clickPosition, this.clickPosition, this.object.scalingLocal);
+            let c = this.getCharacter(this.clickPosition);
+            if(this.lastCharacter != null) {
+                this.lastCharacter.mesh.material = this.keyMaterial;
+                this.lastCharacter = null;
+            }
+            if(c != null) {
+                c.config.mesh.material = this.keyMaterialHovered;
+                this.lastCharacter = c.config;
+            }
+        });
+      }
+
+      this.text = "";
       this.shift = false;
 
       const UNIT_SIZE = 51.2;
 
       let keys = Object.entries( this.config );
       this.children = WL.scene.addObjects(keys.length, this.object, keys.length);
-      let childPos = new Float32Array(3);
 
       for(let i = 0; i < keys.length; i++) {
         let currentChild = this.children[i];
@@ -62,50 +89,54 @@ WL.registerComponent('keyboard', {
         text.material = this.textMaterial;
         text.alignment = 2;
         text.justification = 2;
-        childPos[0] = 0
-        childPos[1] = 0
-        childPos[2] = 0.02;
         textChild.scale([this.textSize, this.textSize, this.textSize]);
-        textChild.setTranslationLocal(childPos)
+        textChild.setTranslationLocal([0, 0, 0.02]);
 
         this.config[currentKey[0]].textComponent = text;
         this.config[currentKey[0]].meshChild = meshChild;
 
         let widthOffset =  ((currentKeyData.width / UNIT_SIZE) - 1);
-        childPos[0] = (currentKeyData.position.x * this.panelSizeX) + widthOffset * 0.15;
-        childPos[1] = currentKeyData.position.y * this.panelSizeY;
-        childPos[2] = 0.02;
-        currentChild.setTranslationLocal(childPos)
+        currentChild.setTranslationLocal([
+            (currentKeyData.position.x * this.panelSizeX) + widthOffset * 0.15,
+            currentKeyData.position.y * this.panelSizeY,
+            0.02
+        ]);
         meshChild.scale([0.15 + widthOffset * 0.15, 0.15, 0.15]);
       }
       this.getContent(0);
     },
-    getClickedCharacter: function(localPosition) {
+    addKeyCallback: function(f) {
+        this.keyCallbacks.push(f);
+    },
+    removeKeyCallback: function(f) {
+        const index = this.keyCallbacks.indexOf(f);
+        this.keyCallbacks.splice(index, 1);
+    },
+    getCharacter: function(localPosition) {
       let keys = Object.entries( this.config );
       for(let i = 0; i < keys.length; i++) {
-        let currentKey = keys[i];
-        let currentChild = this.config[currentKey[0]].object;
-        glMatrix.vec3.copy(this.tempScaleVec, this.config[currentKey[0]].meshChild.scalingLocal);
-        this.tempScaleVec[0] = this.tempScaleVec[0];
-        this.tempScaleVec[1] = this.tempScaleVec[1];
-        currentChild.getTranslationLocal(this.tempVec);
+        let key = keys[i][0];
+        this.tempScaleVec.set(this.config[key].meshChild.scalingLocal);
+        this.config[key].object.getTranslationLocal(this.tempVec);
 
         glMatrix.vec2.sub(this.tempVec2Min, this.tempVec, this.tempScaleVec)
         glMatrix.vec2.add(this.tempVec2Max, this.tempVec, this.tempScaleVec)
 
-        if( this.tempVec2Min[0] <= localPosition[0] && localPosition[0] <= this.tempVec2Max[0] && this.tempVec2Min[1] <= localPosition[1] && localPosition[1] <= this.tempVec2Max[1] ) {
-          this.clickKey(this.config[currentKey[0]].mesh)
-          return keys[i][0];
+        if(this.tempVec2Min[0] <= localPosition[0] && localPosition[0] <= this.tempVec2Max[0] && this.tempVec2Min[1] <= localPosition[1] && localPosition[1] <= this.tempVec2Max[1] ) {
+            return {key: keys[i][0], config: this.config[key]};
         }
       }
-
       return null;
+    },
+    getClickedCharacter: function(localPosition) {
+      const c = this.getCharacter(localPosition);
+      if(!c) return null;
+      this.clickKey(c.config.mesh)
+      return c.key;
     },
     clickKey: function(mesh) {
       mesh.material = this.clickMaterial;
-      setTimeout(function() {
-        mesh.material = this.keyMaterial;
-      }.bind(this), 150);
+      setTimeout(() => { mesh.material = this.keyMaterial; }, 150);
     },
     getConfig: function() {
       let width = 51.2;
@@ -192,55 +223,67 @@ WL.registerComponent('keyboard', {
       }
     },
     onSelect: function( key ) {
-      let changeLayout = false
-      let change = false
+      let changeLayout = false;
+      let change = null;
 
       switch(key) {
         case 'btn34'://Enter
-            this.linkedText += "\n";
-            change = true;
+            change = '\n';
             break;
         case 'btn32'://space
-            this.linkedText += ' ';
-            change = true;
+            change = ' ';
             break;
         case 'btn30'://switch keyboard
             this.shift = false;
             this.getContent( this.keyboardIndex < 2 ? 2 : 0 );
             break;
         case 'btn28'://backspace
-            this.linkedText = this.linkedText.substring( 0, this.linkedText.length-1 );
-            change = true;
+            change = -1;
             break;
         case 'btn20'://shift
             this.shift = !this.shift;
             if (this.keyboardIndex==0){
-                this.getContent( 1 );
+                this.getContent(1);
             }else if (this.keyboardIndex==1){
-                this.getContent( 0 );
+                this.getContent(0);
             }else if (this.keyboardIndex==2){
-                this.getContent( 3 );
+                this.getContent(3);
             }else if (this.keyboardIndex==3){
-                this.getContent( 2 );
+                this.getContent(2);
             }
             break;
         default:
-            const txt = this.content[key];
-            this.linkedText += txt;
-            change = true;
+            change = this.content[key];
+            /* If shift was pressed, we want to unshift! */
+            if(this.shift) {
+                this.shift = false;
+                if (this.keyboardIndex==0){
+                    this.getContent(1);
+                } else if (this.keyboardIndex==1){
+                     this.getContent(0);
+                } else if (this.keyboardIndex==2){
+                     this.getContent(3);
+                } else if (this.keyboardIndex==3){
+                    this.getContent(2);
+                }
+            }
             break;
       }
-      if ( change ) {
-        for(let i = 0; i < this.linkedTextChangedCallbacks.length; i++) {
-          this.linkedTextChangedCallbacks[i](this.linkedText);
+      if(change) {
+        if(change < 0) {
+            this.text = this.text.substring(0, this.text.length + change);
+        } else {
+            this.text += change;
         }
+        for(const f of this.textChangedCallbacks) f(this.text);
+        for(const f of this.keyCallbacks) f(change);
       }
     },
-    addOnLinkedTextChangedCallback: function(f) {
-      if(!this.linkedTextChangedCallbacks)
-        	this.linkedTextChangedCallbacks = [];
-      this.linkedTextChangedCallbacks.push(f);
+    addTextChangedCallback: function(f) {
+      this.textChangedCallbacks.push(f);
     },
+    show: function() { this.setVisibility(true); },
+    hide: function() { this.setVisibility(false); },
     setVisibility: function(b) {
       if(!b) {
         this.object.scale([0, 0, 0]);
@@ -250,5 +293,22 @@ WL.registerComponent('keyboard', {
         this.collider.active = true;
       }
     }
-
 });
+
+/** Component to play sound on keyboard keys with howler-audio-source */
+WL.registerComponent('howler-keyboard-sound', {
+    keyboard: {type: WL.Type.Object}
+}, {
+    start: function() {
+        if(!this.keyboard) {
+            throw new Error('keyboard object not set');
+        }
+        const howlerSource = this.object.getComponent('howler-audio-source');
+        const kb = this.keyboard.getComponent('keyboard');
+
+        kb.addKeyCallback(() => {
+            howlerSource.play();
+        })
+    }
+});
+
